@@ -23,22 +23,38 @@ app.get("/api/notes", (req, res) => {
 app.post("/api/notes", (req, res) => {
     var {title, text} = req.body;
     var id = uuidv4();
-    var reqJSON = JSON.parse(JSON.stringify({title: title, text: text, id: id}));
+    var request = JSON.parse(JSON.stringify({title: title, text: text, id: id}));
     fs.readFile(__dirname + "/db/db.json", "utf8", (err, data) => {
         if (err) throw err;
-        writeDB(reqJSON, JSON.parse(data));
+        data = JSON.parse(data);
+        data[data.length] = request;
+        data = JSON.stringify(data, null, "\t");
+        
+        fs.writeFile(__dirname + "/db/db.json", data, "utf8", (err) => {
+            if (err) throw err;
+        });
     });
-    res.send(reqJSON);
+    res.send(request);
 });
 
-writeDB = function(reqJSON, database){
-    newJSON = database;
-    newJSON[newJSON.length] = reqJSON;
-    newJSON = JSON.stringify(newJSON, null, "\t");
-    fs.writeFile(__dirname + "/db/db.json", newJSON, "utf8", (err) => {
+app.delete("/api/notes/:id", (req, res) => {
+    fs.readFile(__dirname + "/db/db.json", "utf8", (err, data) => {
         if (err) throw err;
+        let id = req.params.id
+        data = JSON.parse(data);
+        for (let i = 0; i < data.length; i++){
+            if (data[i].id === id){
+                data.splice(i, 1);
+                console.log(data);
+                console.log("Successfully deleted");
+            }
+        }
+        data = JSON.stringify(data, null, "\t");
+        fs.writeFile(__dirname + "/db/db.json", data, "utf8", (err) => {
+            if (err) throw err;
+        });
     });
-}
+});
 
 app.listen(PORT, function (err) {
     err && console.log(err)
