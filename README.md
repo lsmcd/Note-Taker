@@ -6,10 +6,16 @@ A text note taking app whose backend I created to practice Express.js
 
 ![Image of website](./screenshot.png "screenshot")
 
-Uses:
+Back End:
 
 - <http://expressjs.com/>
 - <https://nodejs.org/>
+- <https://www.npmjs.com/package/uuid/v/8.2.0>
+
+Front End:
+
+- <https://getbootstrap.com/>
+- <https://use.fontawesome.com/releases/v5.3.1/css/all.css>
 
 ## Table of Contents
 
